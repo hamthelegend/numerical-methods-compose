@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import methods.components.DataTableRowPreview
 import methods.screens.MainScreen
 
 @Composable
@@ -16,7 +17,7 @@ fun App() {
     var text by remember { mutableStateOf("Hello, World!") }
 
     MaterialTheme {
-        MainScreen()
+        DataTableRowPreview()
     }
 }
 
