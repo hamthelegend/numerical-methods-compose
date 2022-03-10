@@ -46,7 +46,7 @@ fun DataTable(
                 DataTableRow(
                     values = headerValues,
                     textAlign = textAlign,
-                    isHeader = true,
+                    header = true,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -68,7 +68,7 @@ fun DataTableRow(
     values: List<String>,
     modifier: Modifier = Modifier,
     textAlign: TextAlign? = null,
-    isHeader: Boolean = false,
+    header: Boolean = false,
 ) {
     Row(modifier = modifier) {
         for (cellValue in values) {
@@ -76,7 +76,7 @@ fun DataTableRow(
                 DataTableCell(
                     value = cellValue,
                     textAlign = textAlign,
-                    isHeader = isHeader,
+                    header = header,
                 )
                 Divider(Modifier.fillMaxWidth())
             }
@@ -89,12 +89,12 @@ fun DataTableCell(
     value: String,
     modifier: Modifier = Modifier,
     textAlign: TextAlign? = null,
-    isHeader: Boolean = false,
+    header: Boolean = false,
 ) {
     Text(
         text = value,
         textAlign = textAlign,
-        fontWeight = if (isHeader) FontWeight.Bold else null,
+        fontWeight = if (header) FontWeight.Bold else null,
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .fillMaxWidth(),

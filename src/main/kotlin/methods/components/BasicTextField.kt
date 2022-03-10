@@ -14,7 +14,8 @@ fun BasicTextField(
     label: String,
     modifier: Modifier = Modifier,
     placeholder: String = "",
-    isNumberOnly: Boolean = false,
+    numberOnly: Boolean = false,
+    singleLine: Boolean = true,
 ) {
     TextField(
         value = value,
@@ -23,6 +24,7 @@ fun BasicTextField(
         placeholder = { Text(text = placeholder) },
         modifier = modifier,
         keyboardOptions =
-        KeyboardOptions.Default.copy(keyboardType = if (isNumberOnly) KeyboardType.Number else KeyboardType.Text)
+        KeyboardOptions.Default.copy(keyboardType = if (numberOnly) KeyboardType.Number else KeyboardType.Text),
+        singleLine = singleLine
     )
 }
