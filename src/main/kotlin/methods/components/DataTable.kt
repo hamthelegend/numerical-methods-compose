@@ -1,50 +1,89 @@
 package methods.components
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DataTableRow(
-    cellValues: List<String>,
-    modifier: Modifier = Modifier,
+fun DataTable(
+    values: List<List<String>>,
     backgroundColor: Color,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign? = null,
 ) {
-    Surface(
-        modifier = modifier,
-        color = backgroundColor
-    ) {
-        SelectionContainer(modifier = Modifier.fillMaxSize()) {
-            LazyRow(modifier = Modifier.fillMaxSize()) {
-                items(cellValues) { cellValue ->
-                    Text(
-                        text = cellValue + '\t',
-                        modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-                }
+    Card(backgroundColor = backgroundColor, modifier = modifier) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            itemsIndexed(values) { index, rowValues ->
+                DataTableRow(
+                    values = rowValues,
+                    textAlign = textAlign,
+                    isHeader = index == 0,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
 }
 
+@Composable
+fun DataTableRow(
+    values: List<String>,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign? = null,
+    isHeader: Boolean = false,
+) {
+    Row(modifier = modifier) {
+        for (cellValue in values) {
+            Column(modifier = Modifier.weight(1f)) {
+                DataTableCell(
+                    value = cellValue,
+                    textAlign = textAlign,
+                    isHeader = isHeader,
+                )
+                Divider(Modifier.fillMaxWidth())
+            }
+        }
+    }
+}
+
+@Composable
+fun DataTableCell(
+    value: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign? = null,
+    isHeader: Boolean = false,
+) {
+    Text(
+        text = value,
+        textAlign = textAlign,
+        fontWeight = if (isHeader) FontWeight.Bold else null,
+        modifier = modifier
+            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .fillMaxSize(),
+    )
+}
+
 @Preview
 @Composable
-fun DataTableRowPreview() {
-    DataTableRow(
-        cellValues = listOf("a", "b", "c"),
-        modifier = Modifier.fillMaxWidth(),
-        backgroundColor = MaterialTheme.colors.background
+fun DataTablePreview() {
+    val values = mutableListOf(('A'..'J').map { it.toString() })
+    repeat(200) {
+        values.add((1..10).map { it.toString() })
+    }
+    DataTable(
+        values = values,
+        backgroundColor = Color.White,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(16.dp).fillMaxSize()
     )
 }
