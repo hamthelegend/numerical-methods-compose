@@ -1,35 +1,63 @@
 package methods.components
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+@Preview
+@Composable
+fun DataTablePreview() {
+    DataTable(
+        headerValues = ('A'..'J').map { it.toString() },
+        values = (Array(200) { (1..10).map { it.toString() } }).toList(),
+//        backgroundColor = Color.White,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(16.dp).fillMaxSize()
+    )
+}
+
 @Composable
 fun DataTable(
+    headerValues: List<String>,
     values: List<List<String>>,
-    backgroundColor: Color,
     modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colors.background,
     textAlign: TextAlign? = null,
 ) {
+    val lazyColumnState = rememberLazyListState()
+    val headerElevation by animateDpAsState(
+        if (lazyColumnState.firstVisibleItemIndex == 0 && lazyColumnState.firstVisibleItemScrollOffset == 0) 0.dp else 4.dp
+    )
+
     Card(backgroundColor = backgroundColor, modifier = modifier) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            itemsIndexed(values) { index, rowValues ->
+        Column {
+            Surface(elevation = headerElevation) {
                 DataTableRow(
-                    values = rowValues,
+                    values = headerValues,
                     textAlign = textAlign,
-                    isHeader = index == 0,
+                    isHeader = true,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+            LazyColumn(modifier = Modifier.fillMaxSize(), lazyColumnState) {
+                items(values) { rowValues ->
+                    DataTableRow(
+                        values = rowValues,
+                        textAlign = textAlign,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
@@ -69,21 +97,6 @@ fun DataTableCell(
         fontWeight = if (isHeader) FontWeight.Bold else null,
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
-            .fillMaxSize(),
-    )
-}
-
-@Preview
-@Composable
-fun DataTablePreview() {
-    val values = mutableListOf(('A'..'J').map { it.toString() })
-    repeat(200) {
-        values.add((1..10).map { it.toString() })
-    }
-    DataTable(
-        values = values,
-        backgroundColor = Color.White,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(16.dp).fillMaxSize()
+            .fillMaxWidth(),
     )
 }
