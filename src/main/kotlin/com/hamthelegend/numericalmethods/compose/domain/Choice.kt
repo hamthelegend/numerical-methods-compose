@@ -4,5 +4,6 @@ data class Choice<T>(val value: T, val choiceToString: (T.() -> String) = { toSt
     override fun toString() = value.choiceToString()
 }
 
-fun <T> Array<T>.toChoices(choiceToString: T.() -> String = { toString() }) = toList().toChoices(choiceToString)
+fun <T> T.toChoice(choiceToString: T.() -> String = { toString() }) = Choice(this, choiceToString)
+fun <T> Array<T>.toChoices(choiceToString: T.() -> String = { toString() }) = map { Choice(it, choiceToString) }
 fun <T> Collection<T>.toChoices(choiceToString: (T.() -> String) = { toString() }) = map { Choice(it, choiceToString) }
