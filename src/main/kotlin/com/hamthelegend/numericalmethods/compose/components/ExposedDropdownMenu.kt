@@ -20,7 +20,7 @@ import java.math.RoundingMode
 @Composable
 fun ExposedDropdownMenuPreview() {
     val choices = RoundingMode.values().map { roundingMode ->
-        Choice(roundingMode, roundingMode.toString())
+        Choice(roundingMode)
     }
     var selectedChoice by remember { mutableStateOf(choices.first()) }
 
@@ -32,7 +32,7 @@ fun ExposedDropdownMenuPreview() {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Choice: ${selectedChoice.string}")
+        Text(text = "Choice: $selectedChoice")
     }
 }
 
@@ -54,7 +54,7 @@ fun <T> ExposedDropdownMenu(
     Column(modifier) {
         TextField(
             readOnly = true,
-            value = selectedChoice.string,
+            value = selectedChoice.toString(),
             onValueChange = { },
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,7 +82,7 @@ fun <T> ExposedDropdownMenu(
                         println(choice)
                     }
                 ) {
-                    Text(text = choice.string)
+                    Text(text = choice.toString())
                 }
             }
         }

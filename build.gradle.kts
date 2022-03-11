@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.31"
-    id("org.jetbrains.com.hamthelegend.numericalmethods.compose") version "1.0.0"
+    id("org.jetbrains.compose") version "1.0.0"
 }
 
 group = "com.hamthelegend"

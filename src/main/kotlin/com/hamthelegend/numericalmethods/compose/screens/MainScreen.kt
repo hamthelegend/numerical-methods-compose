@@ -15,12 +15,13 @@ import androidx.compose.ui.unit.dp
 import methods.common.Default
 import com.hamthelegend.numericalmethods.compose.components.BasicTextField
 import com.hamthelegend.numericalmethods.compose.components.ExposedDropdownMenu
-import com.hamthelegend.numericalmethods.compose.domain.methodChoices
+import com.hamthelegend.numericalmethods.compose.domain.Method
+import com.hamthelegend.numericalmethods.compose.domain.toChoices
 
 @Composable
 fun MainScreen() {
 
-    val methods = methodChoices
+    val methods = Method.values().toChoices()
     var selectedMethod by rememberSaveable { mutableStateOf(methods.first()) }
 
     var f by rememberSaveable { mutableStateOf("") }

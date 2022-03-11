@@ -7,5 +7,3 @@ enum class Method(val value: String) {
     NEWTON_RAPHSON("Newton-Raphson"),
     SECANT("Secant"),
 }
-
-val methodChoices = Method.values().map { method -> Choice(method) }
