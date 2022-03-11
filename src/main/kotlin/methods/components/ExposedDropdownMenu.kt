@@ -13,26 +13,22 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import methods.domain.Choice
 import java.math.RoundingMode
-
-data class ExposedDropdownMenuItem<T>(val value: T, val string: String)
 
 @Preview
 @Composable
 fun ExposedDropdownMenuPreview() {
     val choices = RoundingMode.values().map { roundingMode ->
-        ExposedDropdownMenuItem(roundingMode, roundingMode.toString())
+        Choice(roundingMode, roundingMode.toString())
     }
     var selectedChoice by remember { mutableStateOf(choices.first()) }
-    var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(16.dp)) {
         ExposedDropdownMenu(
-            choices,
-            selectedChoice,
+            choices = choices,
+            selectedChoice = selectedChoice,
             onSelectedChoiceChange = { newSelectedChoice -> selectedChoice = newSelectedChoice },
-            expanded = expanded,
-            onExpandChange = { newExpanded -> expanded = newExpanded },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -42,14 +38,13 @@ fun ExposedDropdownMenuPreview() {
 
 @Composable
 fun <T> ExposedDropdownMenu(
-    choices: List<ExposedDropdownMenuItem<T>>,
-    selectedChoice: ExposedDropdownMenuItem<T>,
-    onSelectedChoiceChange: (newSelectedChoice: ExposedDropdownMenuItem<T>) -> Unit,
-    expanded: Boolean,
-    onExpandChange: (newExpanded: Boolean) -> Unit,
+    choices: List<Choice<T>>,
+    selectedChoice: Choice<T>,
+    onSelectedChoiceChange: (newSelectedChoice: Choice<T>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var expanded by remember { mutableStateOf(false) }
 
     val icon = if (expanded)
         Icons.Filled.KeyboardArrowUp //it requires androidx.compose.material:material-icons-extended
@@ -60,7 +55,7 @@ fun <T> ExposedDropdownMenu(
         TextField(
             readOnly = true,
             value = selectedChoice.string,
-            onValueChange = {  },
+            onValueChange = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
@@ -69,21 +64,24 @@ fun <T> ExposedDropdownMenu(
                 },
             label = { Text("Label") },
             trailingIcon = {
-                IconButton(onClick = { onExpandChange(!expanded) }) {
+                IconButton(onClick = { expanded = !expanded }) {
                     Icon(imageVector = icon, if (expanded) "Close Dropdown" else "Expand Dropdown")
                 }
             },
         )
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { onExpandChange(false) },
-            modifier = Modifier.width(with(LocalDensity.current){ textFieldSize.width.toDp() })
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.width(with(LocalDensity.current) { textFieldSize.width.toDp() })
         ) {
             choices.forEach { choice ->
-                DropdownMenuItem(onClick = {
-                    onSelectedChoiceChange(choice)
-                    onExpandChange(false)
-                }) {
+                DropdownMenuItem(
+                    onClick = {
+                        onSelectedChoiceChange(choice)
+                        expanded = false
+                        println(choice)
+                    }
+                ) {
                     Text(text = choice.string)
                 }
             }

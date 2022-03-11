@@ -14,9 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import methods.common.Default
 import methods.components.BasicTextField
+import methods.components.ExposedDropdownMenu
+import methods.domain.methodChoices
 
 @Composable
 fun MainScreen() {
+
+    val methods = methodChoices
+    var selectedMethod by rememberSaveable { mutableStateOf(methods.first()) }
+
     var f by rememberSaveable { mutableStateOf("") }
     var xL by rememberSaveable { mutableStateOf("0") }
     var xR by rememberSaveable { mutableStateOf("1") }
@@ -36,6 +42,12 @@ fun MainScreen() {
                 .weight(1f)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
+            ExposedDropdownMenu(
+                choices = methods,
+                selectedChoice = selectedMethod,
+                onSelectedChoiceChange = { newSelectedChoice -> selectedMethod = newSelectedChoice },
+                modifier = Modifier.fillMaxWidth()
+            )
             BasicTextField(
                 value = f,
                 onValueChange = { newF -> f = newF },
