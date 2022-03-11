@@ -1,4 +1,4 @@
-package methods.components
+package com.hamthelegend.numericalmethods.compose.components
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text

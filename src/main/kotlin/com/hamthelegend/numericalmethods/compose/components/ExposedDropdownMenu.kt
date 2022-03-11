@@ -1,4 +1,4 @@
-package methods.components
+package com.hamthelegend.numericalmethods.compose.components
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
@@ -13,7 +13,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import methods.domain.Choice
+import com.hamthelegend.numericalmethods.compose.domain.Choice
 import java.math.RoundingMode
 
 @Preview
@@ -47,7 +47,7 @@ fun <T> ExposedDropdownMenu(
     var expanded by remember { mutableStateOf(false) }
 
     val icon = if (expanded)
-        Icons.Filled.KeyboardArrowUp //it requires androidx.compose.material:material-icons-extended
+        Icons.Filled.KeyboardArrowUp //it requires androidx.com.hamthelegend.numericalmethods.compose.material:material-icons-extended
     else
         Icons.Filled.KeyboardArrowDown
 

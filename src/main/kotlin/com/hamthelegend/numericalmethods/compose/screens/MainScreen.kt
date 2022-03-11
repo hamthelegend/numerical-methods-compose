@@ -1,4 +1,4 @@
-package methods.screens
+package com.hamthelegend.numericalmethods.compose.screens
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
@@ -13,9 +13,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import methods.common.Default
-import methods.components.BasicTextField
-import methods.components.ExposedDropdownMenu
-import methods.domain.methodChoices
+import com.hamthelegend.numericalmethods.compose.components.BasicTextField
+import com.hamthelegend.numericalmethods.compose.components.ExposedDropdownMenu
+import com.hamthelegend.numericalmethods.compose.domain.methodChoices
 
 @Composable
 fun MainScreen() {

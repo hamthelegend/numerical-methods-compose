@@ -1,4 +1,4 @@
-package methods.domain
+package com.hamthelegend.numericalmethods.compose.domain
 
 enum class Method(val value: String) {
     BISECTION("Bisection"),

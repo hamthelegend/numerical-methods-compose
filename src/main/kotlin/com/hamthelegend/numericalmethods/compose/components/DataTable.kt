@@ -1,4 +1,4 @@
-package methods.components
+package com.hamthelegend.numericalmethods.compose.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.desktop.ui.tooling.preview.Preview
