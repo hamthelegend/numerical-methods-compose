@@ -26,6 +26,7 @@ fun ExposedDropdownMenuPreview() {
 
     Column(modifier = Modifier.padding(16.dp)) {
         ExposedDropdownMenu(
+            label = "label",
             choices = choices,
             selectedChoice = selectedChoice,
             onSelectedChoiceChange = { newSelectedChoice -> selectedChoice = newSelectedChoice },
@@ -38,6 +39,7 @@ fun ExposedDropdownMenuPreview() {
 
 @Composable
 fun <T> ExposedDropdownMenu(
+    label: String,
     choices: List<Choice<T>>,
     selectedChoice: Choice<T>,
     onSelectedChoiceChange: (newSelectedChoice: Choice<T>) -> Unit,
@@ -62,7 +64,7 @@ fun <T> ExposedDropdownMenu(
                     //This value is used to assign to the DropDown the same width
                     textFieldSize = coordinates.size.toSize()
                 },
-            label = { Text("Label") },
+            label = { Text(label) },
             trailingIcon = {
                 IconButton(onClick = { expanded = !expanded }) {
                     Icon(imageVector = icon, if (expanded) "Close Dropdown" else "Expand Dropdown")
