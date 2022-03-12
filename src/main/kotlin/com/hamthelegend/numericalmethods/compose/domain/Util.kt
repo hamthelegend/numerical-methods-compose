@@ -8,6 +8,8 @@ import methods.iterativebracketing.runFalsePosition
 import methods.open.runFixedPoint
 import methods.open.runNewtonRaphson
 import methods.open.runSecant
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -68,6 +70,12 @@ fun solveRoot(
         scale = scale,
         roundingMode = roundingMode
     )
+}
+
+fun String.copyToClipboard() {
+    val stringSelection = StringSelection(this)
+    val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+    clipboard.setContents(stringSelection, null)
 }
 
 val IterationResult.tableString: String
