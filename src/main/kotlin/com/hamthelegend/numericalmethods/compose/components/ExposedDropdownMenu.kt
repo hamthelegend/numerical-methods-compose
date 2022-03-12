@@ -81,7 +81,6 @@ fun <T> ExposedDropdownMenu(
                     onClick = {
                         onSelectedChoiceChange(choice)
                         expanded = false
-                        println(choice)
                     }
                 ) {
                     Text(text = choice.toString())

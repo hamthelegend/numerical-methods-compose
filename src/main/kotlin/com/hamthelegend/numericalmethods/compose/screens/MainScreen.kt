@@ -10,25 +10,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import methods.common.Default
 import com.hamthelegend.numericalmethods.compose.components.BasicTextField
 import com.hamthelegend.numericalmethods.compose.components.DataTable
 import com.hamthelegend.numericalmethods.compose.components.ExposedDropdownMenu
-import com.hamthelegend.numericalmethods.compose.domain.Method
+import com.hamthelegend.numericalmethods.compose.domain.*
 import com.hamthelegend.numericalmethods.compose.domain.Method.*
-import com.hamthelegend.numericalmethods.compose.domain.solveRoot
-import com.hamthelegend.numericalmethods.compose.domain.tableString
-import com.hamthelegend.numericalmethods.compose.domain.toChoices
 import com.hamthelegend.numericalmethods.compose.extensions.equalsOneOf
 import com.hamthelegend.numericalmethods.compose.extensions.toTitleCase
 import methods.common.Fx
 import methods.common.IterationResult
-import java.awt.datatransfer.Clipboard
 import java.math.RoundingMode
 
 @Composable
@@ -188,7 +181,7 @@ fun MainScreen() {
         result?.let { result ->
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(2f).padding(16.dp)
             ) {
                 DataTable(
                     headerValues = result.columnNamesCsv.values,
@@ -200,11 +193,12 @@ fun MainScreen() {
                         valueStrings
                     },
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        // TODO: Copy results.tableString to clipboard
+                        result.tableString.copyToClipboard()
                     },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     elevation = ButtonDefaults.elevation(
