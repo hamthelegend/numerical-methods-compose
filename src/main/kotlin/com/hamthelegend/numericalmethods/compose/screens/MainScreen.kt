@@ -1,5 +1,6 @@
 package com.hamthelegend.numericalmethods.compose.screens
 
+import androidx.compose.animation.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import methods.common.Default
@@ -48,6 +50,8 @@ fun MainScreen() {
         mutableStateOf(roundingModeChoices.find { it.value == RoundingMode.HALF_UP }!!)
     }
 
+    val density = LocalDensity.current
+
     var result: IterationResult? by rememberSaveable { mutableStateOf(null) }
 
     Row {
@@ -62,9 +66,11 @@ fun MainScreen() {
                 choices = methodChoices,
                 selectedChoice = selectedMethodChoice,
                 onSelectedChoiceChange = { newSelectedChoice -> selectedMethodChoice = newSelectedChoice },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
-            if (selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION, NEWTON_RAPHSON, SECANT)) {
+            AnimatedVisibility(
+                visible = selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION, NEWTON_RAPHSON, SECANT)
+            ) {
                 BasicTextField(
                     value = f,
                     onValueChange = { newF -> f = newF },
@@ -72,13 +78,15 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
             }
-            if (selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION)) {
+            AnimatedVisibility(visible = selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION)) {
                 BasicTextField(
                     value = xL,
                     onValueChange = { newXL -> xL = newXL },
                     label = "xL",
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
+            }
+            AnimatedVisibility(visible = selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION)) {
                 BasicTextField(
                     value = xR,
                     onValueChange = { newXR -> xR = newXR },
@@ -86,7 +94,7 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
             }
-            if (selectedMethodChoice.value == FIXED_POINT) {
+            AnimatedVisibility(visible = selectedMethodChoice.value == FIXED_POINT) {
                 BasicTextField(
                     value = g,
                     onValueChange = { newG -> g = newG },
@@ -94,13 +102,15 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
             }
-            if (selectedMethodChoice.value == NEWTON_RAPHSON) {
+            AnimatedVisibility(visible = selectedMethodChoice.value == NEWTON_RAPHSON) {
                 BasicTextField(
                     value = fPrime,
                     onValueChange = { newFPrime -> fPrime = newFPrime },
                     label = "f'(x)",
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
+            }
+            AnimatedVisibility(visible = selectedMethodChoice.value == NEWTON_RAPHSON) {
                 BasicTextField(
                     value = initialX,
                     onValueChange = { newInitialX -> initialX = newInitialX },
@@ -108,13 +118,15 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
             }
-            if (selectedMethodChoice.value == SECANT) {
+            AnimatedVisibility(visible = selectedMethodChoice.value == SECANT) {
                 BasicTextField(
                     value = initialXA,
                     onValueChange = { newInitialXA -> initialXA = newInitialXA },
                     label = "Initial xA",
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
+            }
+            AnimatedVisibility(visible = selectedMethodChoice.value == SECANT) {
                 BasicTextField(
                     value = initialXB,
                     onValueChange = { newInitialXB -> initialXB = newInitialXB },
@@ -144,7 +156,8 @@ fun MainScreen() {
                 label = "Rounding Mode",
                 choices = roundingModeChoices,
                 selectedChoice = selectedRoundingModeChoice,
-                onSelectedChoiceChange = { newSelectedChoice -> selectedRoundingModeChoice = newSelectedChoice }
+                onSelectedChoiceChange = { newSelectedChoice -> selectedRoundingModeChoice = newSelectedChoice },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
 
             Button(
@@ -178,27 +191,35 @@ fun MainScreen() {
             }
 
         }
-        result?.let { result ->
+        AnimatedVisibility(
+            visible = result != null,
+            enter = slideInHorizontally {
+                with(density) { 40.dp.roundToPx() }
+            } + fadeIn(initialAlpha = 0.3f),
+            exit = slideOutHorizontally {
+                with(density) { 40.dp.roundToPx() }
+            } + fadeOut(targetAlpha = 0.3f),
+        ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(2f).padding(16.dp)
             ) {
                 DataTable(
-                    headerValues = result.columnNamesCsv.values,
-                    values = result.iterations.mapIndexed { index, iteration ->
+                    headerValues = result?.columnNamesCsv?.values ?: listOf(),
+                    values = result?.iterations?.mapIndexed { index, iteration ->
                         val valueStrings = iteration.valuesCsv.values.map { value ->
                             value.toString()
                         }.toMutableList()
                         valueStrings.add(0, index.toString())
                         valueStrings
-                    },
+                    } ?: listOf(),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        result.tableString.copyToClipboard()
+                        result?.tableString?.copyToClipboard()
                     },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     elevation = ButtonDefaults.elevation(
@@ -210,7 +231,6 @@ fun MainScreen() {
             }
         }
     }
-
 }
 
 @Preview
