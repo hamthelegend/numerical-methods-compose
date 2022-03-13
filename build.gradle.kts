@@ -28,11 +28,11 @@ tasks.withType<KotlinCompile> {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.hamthelegend.numericalmethods.compose.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Exe)
             packageName = "NumericalMethodsCompose"
-            packageVersion = "1.0.0"
+            packageVersion = "0.1.0"
         }
     }
 }
