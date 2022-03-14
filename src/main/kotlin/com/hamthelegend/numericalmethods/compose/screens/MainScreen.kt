@@ -10,6 +10,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -110,7 +111,7 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 )
             }
-            AnimatedVisibility(visible = selectedMethodChoice.value == NEWTON_RAPHSON) {
+            AnimatedVisibility(visible = selectedMethodChoice.value.equalsOneOf(FIXED_POINT, NEWTON_RAPHSON)) {
                 BasicTextField(
                     value = initialX,
                     onValueChange = { newInitialX -> initialX = newInitialX },
@@ -195,14 +196,14 @@ fun MainScreen() {
             visible = result != null,
             enter = slideInHorizontally {
                 with(density) { 40.dp.roundToPx() }
-            } + fadeIn(initialAlpha = 0.3f),
+            } + fadeIn(initialAlpha = 0.3f) + expandHorizontally(expandFrom = Alignment.End),
             exit = slideOutHorizontally {
                 with(density) { 40.dp.roundToPx() }
-            } + fadeOut(targetAlpha = 0.3f),
+            } + fadeOut(targetAlpha = 0.3f) + shrinkHorizontally(shrinkTowards = Alignment.End),
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(2f).padding(16.dp)
+                modifier = Modifier.fillMaxWidth(fraction = 2f / 3).padding(16.dp)
             ) {
                 DataTable(
                     headerValues = result?.columnNamesCsv?.values ?: listOf(),
@@ -221,7 +222,7 @@ fun MainScreen() {
                     onClick = {
                         result?.tableString?.copyToClipboard()
                     },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     elevation = ButtonDefaults.elevation(
                         defaultElevation = 0.dp,
                     )
