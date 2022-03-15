@@ -22,18 +22,18 @@ fun ExposedDropdownMenuPreview() {
     val choices = RoundingMode.values().map { roundingMode ->
         Choice(roundingMode)
     }
-    var selectedChoice by remember { mutableStateOf(choices.first()) }
+    var choice by remember { mutableStateOf(choices.first()) }
 
     Column(modifier = Modifier.padding(16.dp)) {
         ExposedDropdownMenu(
             label = "label",
             choices = choices,
-            selectedChoice = selectedChoice,
-            onSelectedChoiceChange = { newSelectedChoice -> selectedChoice = newSelectedChoice },
+            choice = choice,
+            onChoiceChange = { newChoice -> choice = newChoice },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Choice: $selectedChoice")
+        Text(text = "Choice: $choice")
     }
 }
 
@@ -41,8 +41,8 @@ fun ExposedDropdownMenuPreview() {
 fun <T> ExposedDropdownMenu(
     label: String,
     choices: List<Choice<T>>,
-    selectedChoice: Choice<T>,
-    onSelectedChoiceChange: (newSelectedChoice: Choice<T>) -> Unit,
+    choice: Choice<T>,
+    onChoiceChange: (newChoice: Choice<T>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -56,7 +56,7 @@ fun <T> ExposedDropdownMenu(
     Column(modifier) {
         TextField(
             readOnly = true,
-            value = selectedChoice.toString(),
+            value = choice.toString(),
             onValueChange = { },
             modifier = Modifier
                 .fillMaxWidth()
@@ -79,7 +79,7 @@ fun <T> ExposedDropdownMenu(
             choices.forEach { choice ->
                 DropdownMenuItem(
                     onClick = {
-                        onSelectedChoiceChange(choice)
+                        onChoiceChange(choice)
                         expanded = false
                     }
                 ) {

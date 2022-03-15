@@ -1,29 +1,22 @@
 package com.hamthelegend.numericalmethods.compose.screens
 
-import androidx.compose.animation.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import methods.common.Default
-import com.hamthelegend.numericalmethods.compose.components.BasicTextField
-import com.hamthelegend.numericalmethods.compose.components.DataTable
-import com.hamthelegend.numericalmethods.compose.components.ExposedDropdownMenu
-import com.hamthelegend.numericalmethods.compose.domain.*
-import com.hamthelegend.numericalmethods.compose.domain.Method.*
-import com.hamthelegend.numericalmethods.compose.extensions.equalsOneOf
+import com.hamthelegend.numericalmethods.compose.domain.Method
+import com.hamthelegend.numericalmethods.compose.domain.toChoices
 import com.hamthelegend.numericalmethods.compose.extensions.toTitleCase
-import methods.common.Fx
+import methods.common.Default
 import methods.common.IterationResult
 import java.math.RoundingMode
 
@@ -31,7 +24,7 @@ import java.math.RoundingMode
 fun MainScreen() {
 
     val methodChoices = Method.values().toChoices { toString().toTitleCase("_") }
-    var selectedMethodChoice by rememberSaveable { mutableStateOf(methodChoices.first()) }
+    var methodChoice by rememberSaveable { mutableStateOf(methodChoices.first()) }
 
     var f by rememberSaveable { mutableStateOf("") }
     var xL by rememberSaveable { mutableStateOf("0") }
@@ -47,192 +40,55 @@ fun MainScreen() {
     val scrollState = rememberScrollState(initial = 0)
 
     val roundingModeChoices = RoundingMode.values().toChoices { toString().toTitleCase("_") }
-    var selectedRoundingModeChoice by rememberSaveable {
+    var roundingModeChoice by rememberSaveable {
         mutableStateOf(roundingModeChoices.find { it.value == RoundingMode.HALF_UP }!!)
     }
-
-    val density = LocalDensity.current
 
     var result: IterationResult? by rememberSaveable { mutableStateOf(null) }
 
     Row {
-        Column(
+        ConfigScreen(
+            methodChoices = methodChoices,
+            methodChoice = methodChoice,
+            onMethodChoiceChange = { newMethodChoice -> methodChoice = newMethodChoice },
+            f = f,
+            onFChange = { newF -> f = newF },
+            xL = xL,
+            onXLChange = { newXL -> xL = newXL },
+            xR = xR,
+            onXRChange = { newXR -> xR = newXR },
+            g = g,
+            onGChange = { newG -> g = newG },
+            fPrime = fPrime,
+            onFPrimeChange = { newFPrime -> fPrime = newFPrime },
+            initialX = initialX,
+            onInitialXChange = { newInitialX -> initialX = newInitialX },
+            initialXA = initialXA,
+            onInitialXAChange = { newInitialXA -> initialXA = newInitialXA },
+            initialXB = initialXB,
+            onInitialXBChange = { newInitialXB -> initialXB = newInitialXB },
+            minIterations = minIterations,
+            onMinIterationsChange = { newMinIterations -> minIterations = newMinIterations },
+            maxIterations = maxIterations,
+            onMaxIterationsChange = { newMaxIterations -> maxIterations = newMaxIterations },
+            scale = scale,
+            onScaleChange = { newScale -> scale = newScale },
+            roundingModeChoices = roundingModeChoices,
+            roundingModeChoice = roundingModeChoice,
+            onRoundingModeChoiceChange = { newRoundingModeChoice -> roundingModeChoice = newRoundingModeChoice },
+            onResultChange = { newResult -> result = newResult },
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .weight(1f)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            ExposedDropdownMenu(
-                label = "Method",
-                choices = methodChoices,
-                selectedChoice = selectedMethodChoice,
-                onSelectedChoiceChange = { newSelectedChoice -> selectedMethodChoice = newSelectedChoice },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-            )
-            AnimatedVisibility(
-                visible = selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION, NEWTON_RAPHSON, SECANT)
-            ) {
-                BasicTextField(
-                    value = f,
-                    onValueChange = { newF -> f = newF },
-                    label = "f(x)",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION)) {
-                BasicTextField(
-                    value = xL,
-                    onValueChange = { newXL -> xL = newXL },
-                    label = "xL",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value.equalsOneOf(BISECTION, FALSE_POSITION)) {
-                BasicTextField(
-                    value = xR,
-                    onValueChange = { newXR -> xR = newXR },
-                    label = "xR",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value == FIXED_POINT) {
-                BasicTextField(
-                    value = g,
-                    onValueChange = { newG -> g = newG },
-                    label = "g(x)",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value == NEWTON_RAPHSON) {
-                BasicTextField(
-                    value = fPrime,
-                    onValueChange = { newFPrime -> fPrime = newFPrime },
-                    label = "f'(x)",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value.equalsOneOf(FIXED_POINT, NEWTON_RAPHSON)) {
-                BasicTextField(
-                    value = initialX,
-                    onValueChange = { newInitialX -> initialX = newInitialX },
-                    label = "Initial x",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value == SECANT) {
-                BasicTextField(
-                    value = initialXA,
-                    onValueChange = { newInitialXA -> initialXA = newInitialXA },
-                    label = "Initial xA",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            AnimatedVisibility(visible = selectedMethodChoice.value == SECANT) {
-                BasicTextField(
-                    value = initialXB,
-                    onValueChange = { newInitialXB -> initialXB = newInitialXB },
-                    label = "Initial xB",
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                )
-            }
-            BasicTextField(
-                value = minIterations,
-                onValueChange = { newMinIterations -> minIterations = newMinIterations },
-                label = "Minimum iterations",
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            )
-            BasicTextField(
-                value = maxIterations,
-                onValueChange = { newMaxIterations -> maxIterations = newMaxIterations },
-                label = "Maximum iterations",
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            )
-            BasicTextField(
-                value = scale,
-                onValueChange = { newScale -> scale = newScale },
-                label = "Scale",
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            )
-            ExposedDropdownMenu(
-                label = "Rounding Mode",
-                choices = roundingModeChoices,
-                selectedChoice = selectedRoundingModeChoice,
-                onSelectedChoiceChange = { newSelectedChoice -> selectedRoundingModeChoice = newSelectedChoice },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-            )
-
-            Button(
-                onClick = {
-                    result = try {
-                        solveRoot(
-                            method = selectedMethodChoice.value,
-                            f = Fx(f),
-                            xL = xL.toBigDecimal(),
-                            xR = xR.toBigDecimal(),
-                            g = Fx(g),
-                            fPrime = Fx(fPrime),
-                            initialX = initialX.toBigDecimal(),
-                            initialXA = initialXA.toBigDecimal(),
-                            initialXB = initialXB.toBigDecimal(),
-                            minIterations = minIterations.toInt(),
-                            maxIterations = maxIterations.toInt(),
-                            scale = scale.toInt(),
-                            roundingMode = selectedRoundingModeChoice.value
-                        )
-                    } catch (e: Exception) {
-                        null
-                    }
-                },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                )
-            ) {
-                Text("Solve root")
-            }
-
-        }
-        AnimatedVisibility(
-            visible = result != null,
-            enter = slideInHorizontally {
-                with(density) { 40.dp.roundToPx() }
-            } + fadeIn(initialAlpha = 0.3f) + expandHorizontally(expandFrom = Alignment.End),
-            exit = slideOutHorizontally {
-                with(density) { 40.dp.roundToPx() }
-            } + fadeOut(targetAlpha = 0.3f) + shrinkHorizontally(shrinkTowards = Alignment.End),
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth(fraction = 2f / 3).padding(16.dp)
-            ) {
-                DataTable(
-                    headerValues = result?.columnNamesCsv?.values ?: listOf(),
-                    values = result?.iterations?.mapIndexed { index, iteration ->
-                        val valueStrings = iteration.valuesCsv.values.map { value ->
-                            value.toString()
-                        }.toMutableList()
-                        valueStrings.add(0, index.toString())
-                        valueStrings
-                    } ?: listOf(),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        result?.tableString?.copyToClipboard()
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                    )
-                ) {
-                    Text("Copy table")
-                }
-            }
-        }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        )
+        ResultScreen(
+            result = result,
+            modifier = Modifier.fillMaxWidth(fraction = 2f / 3).padding(16.dp)
+        )
     }
 }
+
 
 @Preview
 @Composable
