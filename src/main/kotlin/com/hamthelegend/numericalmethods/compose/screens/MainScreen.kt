@@ -48,10 +48,10 @@ fun MainScreen() {
 
     var result: IterationResult? by rememberSaveable { mutableStateOf(null) }
 
-    Row {
-        Scaffold(
-            topBar = { TopBar() }
-        ) {
+    Scaffold(
+        topBar = { TopBar() }
+    ) { paddingValues ->
+        Row(modifier = Modifier.padding(paddingValues)) {
             ConfigScreen(
                 methodChoices = methodChoices,
                 methodChoice = methodChoice,
@@ -80,7 +80,9 @@ fun MainScreen() {
                 onScaleChange = { newScale -> scale = newScale },
                 roundingModeChoices = roundingModeChoices,
                 roundingModeChoice = roundingModeChoice,
-                onRoundingModeChoiceChange = { newRoundingModeChoice -> roundingModeChoice = newRoundingModeChoice },
+                onRoundingModeChoiceChange = { newRoundingModeChoice ->
+                    roundingModeChoice = newRoundingModeChoice
+                },
                 onResultChange = { newResult -> result = newResult },
                 modifier = Modifier
                     .verticalScroll(scrollState)
