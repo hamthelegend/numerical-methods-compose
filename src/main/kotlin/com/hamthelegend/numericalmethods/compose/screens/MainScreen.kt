@@ -1,11 +1,13 @@
 package com.hamthelegend.numericalmethods.compose.screens
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,48 +49,63 @@ fun MainScreen() {
     var result: IterationResult? by rememberSaveable { mutableStateOf(null) }
 
     Row {
-        ConfigScreen(
-            methodChoices = methodChoices,
-            methodChoice = methodChoice,
-            onMethodChoiceChange = { newMethodChoice -> methodChoice = newMethodChoice },
-            f = f,
-            onFChange = { newF -> f = newF },
-            xL = xL,
-            onXLChange = { newXL -> xL = newXL },
-            xR = xR,
-            onXRChange = { newXR -> xR = newXR },
-            g = g,
-            onGChange = { newG -> g = newG },
-            fPrime = fPrime,
-            onFPrimeChange = { newFPrime -> fPrime = newFPrime },
-            initialX = initialX,
-            onInitialXChange = { newInitialX -> initialX = newInitialX },
-            initialXA = initialXA,
-            onInitialXAChange = { newInitialXA -> initialXA = newInitialXA },
-            initialXB = initialXB,
-            onInitialXBChange = { newInitialXB -> initialXB = newInitialXB },
-            minIterations = minIterations,
-            onMinIterationsChange = { newMinIterations -> minIterations = newMinIterations },
-            maxIterations = maxIterations,
-            onMaxIterationsChange = { newMaxIterations -> maxIterations = newMaxIterations },
-            scale = scale,
-            onScaleChange = { newScale -> scale = newScale },
-            roundingModeChoices = roundingModeChoices,
-            roundingModeChoice = roundingModeChoice,
-            onRoundingModeChoiceChange = { newRoundingModeChoice -> roundingModeChoice = newRoundingModeChoice },
-            onResultChange = { newResult -> result = newResult },
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .weight(1f)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-        )
-        ResultScreen(
-            result = result,
-            modifier = Modifier.fillMaxWidth(fraction = 2f / 3).padding(16.dp)
-        )
+        Scaffold(
+            topBar = { TopBar() }
+        ) {
+            ConfigScreen(
+                methodChoices = methodChoices,
+                methodChoice = methodChoice,
+                onMethodChoiceChange = { newMethodChoice -> methodChoice = newMethodChoice },
+                f = f,
+                onFChange = { newF -> f = newF },
+                xL = xL,
+                onXLChange = { newXL -> xL = newXL },
+                xR = xR,
+                onXRChange = { newXR -> xR = newXR },
+                g = g,
+                onGChange = { newG -> g = newG },
+                fPrime = fPrime,
+                onFPrimeChange = { newFPrime -> fPrime = newFPrime },
+                initialX = initialX,
+                onInitialXChange = { newInitialX -> initialX = newInitialX },
+                initialXA = initialXA,
+                onInitialXAChange = { newInitialXA -> initialXA = newInitialXA },
+                initialXB = initialXB,
+                onInitialXBChange = { newInitialXB -> initialXB = newInitialXB },
+                minIterations = minIterations,
+                onMinIterationsChange = { newMinIterations -> minIterations = newMinIterations },
+                maxIterations = maxIterations,
+                onMaxIterationsChange = { newMaxIterations -> maxIterations = newMaxIterations },
+                scale = scale,
+                onScaleChange = { newScale -> scale = newScale },
+                roundingModeChoices = roundingModeChoices,
+                roundingModeChoice = roundingModeChoice,
+                onRoundingModeChoiceChange = { newRoundingModeChoice -> roundingModeChoice = newRoundingModeChoice },
+                onResultChange = { newResult -> result = newResult },
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .weight(1f)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+            ResultScreen(
+                result = result,
+                modifier = Modifier.fillMaxWidth(fraction = 2f / 3).padding(16.dp)
+            )
+        }
     }
 }
 
+@Preview
+@Composable
+fun TopBar() {
+    TopAppBar(backgroundColor = MaterialTheme.colors.surface) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = "Numerical Methods",
+            style = MaterialTheme.typography.h6
+        )
+    }
+}
 
 @Preview
 @Composable
