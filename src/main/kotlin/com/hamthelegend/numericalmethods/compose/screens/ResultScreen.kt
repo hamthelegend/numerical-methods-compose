@@ -40,7 +40,7 @@ fun ResultScreen(
                     val valueStrings = iteration.valuesCsv.values.map { value ->
                         value.toString()
                     }.toMutableList()
-                    valueStrings.add(0, index.toString())
+                    valueStrings.add(0, (index + 1).toString())
                     valueStrings
                 } ?: listOf(),
                 textAlign = TextAlign.Center,

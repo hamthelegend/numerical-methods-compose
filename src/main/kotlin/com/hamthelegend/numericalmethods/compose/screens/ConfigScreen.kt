@@ -192,6 +192,7 @@ fun ConfigScreen(
                             roundingMode = roundingModeChoice.value
                         )
                     } catch (e: Exception) {
+                        println(e)
                         null
                     }
                 )

@@ -83,7 +83,7 @@ val IterationResult.tableString: String
         val stringBuilder = StringBuilder(columnNamesCsv.values.joinToString("\t"))
         stringBuilder.append("\n")
         for ((index, iteration) in iterations.withIndex()) {
-            stringBuilder.append("$index\t")
+            stringBuilder.append("${index + 1}\t")
             stringBuilder.append(iteration.valuesCsv.values.joinToString("\t"))
             stringBuilder.append("\n")
         }
